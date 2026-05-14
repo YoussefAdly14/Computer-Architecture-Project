@@ -30,4 +30,10 @@
 #define MAX_PROGRAM_LINES       1024
 #define MAX_LINE_LENGTH         128
 
+/*
+    Set to 1 if your TA wants every memory address printed.
+    Set to 0 for readable output that shows loaded instructions and non-zero data only.
+*/
+#define PRINT_FULL_MEMORY       0
+
 #endif

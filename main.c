@@ -7,7 +7,7 @@
 #include "printer.h"
 
 int main(void) {
-    printf("CSEN601 Package 4 Processor Simulator Template\n");
+    printf("CSEN601 Package 4 Processor Simulator\n");
 
     initializeMemory();
     initializeRegisters();

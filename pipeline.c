@@ -4,6 +4,7 @@
 #include "registers.h"
 #include "execute.h"
 #include "printer.h"
+#include "flags.h"
 #include "hazards.h"
 
 PipelineStage fetchStage;
@@ -66,32 +67,26 @@ void runPipeline(void) {
             printf("Control hazard handled: Fetch and Decode stages flushed.\n");
         }
 
-        /*
-            Simple template pipeline advance.
-
-            TODO:
-            - Add complete data hazard handling.
-            - Decide whether to stall or forward.
-            - For now, the function hasDataHazard() is a placeholder.
-        */
-
-        if (hasDataHazard()) {
-            printf("Data hazard detected: TODO stall/forward logic here.\n");
-        }
-
-        executeStage = decodeStage;
-        decodeStage = fetchStage;
-
-        if (getPC() < loadedInstructionCount) {
-            fetchStage.valid = 1;
-            fetchStage.pcOfInstruction = getPC();
-            fetchStage.instruction = fetchInstruction(getPC());
-
-            printf("Fetch Stage: fetched instruction at PC = %u\n", getPC());
-
-            incrementPC();
+        if (exResult.branchTaken) {
+            executeStage.valid = 0;
+        } else if (hasDataHazard()) {
+            printf("Data hazard detected: stalling Fetch and Decode, inserting Execute bubble.\n");
+            executeStage.valid = 0;
         } else {
-            fetchStage.valid = 0;
+            executeStage = decodeStage;
+            decodeStage = fetchStage;
+
+            if (getPC() < loadedInstructionCount) {
+                fetchStage.valid = 1;
+                fetchStage.pcOfInstruction = getPC();
+                fetchStage.instruction = fetchInstruction(getPC());
+
+                printf("Fetch Stage: fetched instruction at PC = %u\n", getPC());
+
+                incrementPC();
+            } else {
+                fetchStage.valid = 0;
+            }
         }
 
         printPipelineStages();

@@ -10,7 +10,7 @@ extern int loadedInstructionCount;
 
 void initializeMemory(void);
 
-void storeInstruction(int address, uint16_t instruction);
+void storeInstruction(uint16_t instruction);
 uint16_t fetchInstruction(int address);
 
 void storeData(int address, int8_t value);

@@ -3,11 +3,16 @@
 #include "pipeline.h"
 #include "instruction.h"
 #include "memory.h"
+#include "utils.h"
 
 void printCompactInstruction(uint16_t instruction) {
     int opcode = getOpcode(instruction);
     int r1 = getR1(instruction);
-    int last = getImmediate6(instruction);
+    int last = getR2(instruction);
+
+    if (opcode == OP_LDI || opcode == OP_BEQZ) {
+        last = signExtend6Bit(getImmediate6(instruction));
+    }
 
     printf("%s R%d %d", opcodeToString(opcode), r1, last);
 }
@@ -35,14 +40,32 @@ void printPipelineStages(void) {
 void printFinalMemory(void) {
     printf("\n========== Instruction Memory ==========\n");
 
+#if PRINT_FULL_MEMORY
+    for (int i = 0; i < INSTRUCTION_MEMORY_SIZE; i++) {
+        printf("IM[%d] = %u", i, instructionMemory[i]);
+
+        if (i < loadedInstructionCount) {
+            printf(" -> ");
+            printCompactInstruction(instructionMemory[i]);
+        }
+
+        printf("\n");
+    }
+#else
     for (int i = 0; i < loadedInstructionCount; i++) {
         printf("IM[%d] = %u -> ", i, instructionMemory[i]);
         printCompactInstruction(instructionMemory[i]);
         printf("\n");
     }
+#endif
 
-    printf("\n========== Data Memory - Non-Zero Values ==========\n");
+    printf("\n========== Data Memory ==========\n");
 
+#if PRINT_FULL_MEMORY
+    for (int i = 0; i < DATA_MEMORY_SIZE; i++) {
+        printf("DM[%d] = %d\n", i, dataMemory[i]);
+    }
+#else
     int found = 0;
 
     for (int i = 0; i < DATA_MEMORY_SIZE; i++) {
@@ -55,4 +78,5 @@ void printFinalMemory(void) {
     if (!found) {
         printf("All data memory values are 0.\n");
     }
+#endif
 }
