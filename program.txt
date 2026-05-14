@@ -1,0 +1,11 @@
+# Sample Package 4 Assembly Program
+# You can edit this file and add your own test cases.
+
+LDI R1 5
+LDI R2 10
+ADD R1 R2
+SB R1 20
+LB R3 20
+BEQZ R3 2
+SUB R1 R2
+OR R1 R3

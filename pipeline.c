@@ -1,0 +1,104 @@
+#include <stdio.h>
+#include "pipeline.h"
+#include "memory.h"
+#include "registers.h"
+#include "execute.h"
+#include "printer.h"
+#include "hazards.h"
+
+PipelineStage fetchStage;
+PipelineStage decodeStage;
+PipelineStage executeStage;
+
+static int cycle = 1;
+
+void initializePipeline(void) {
+    fetchStage.valid = 0;
+    decodeStage.valid = 0;
+    executeStage.valid = 0;
+
+    fetchStage.instruction = 0;
+    decodeStage.instruction = 0;
+    executeStage.instruction = 0;
+
+    fetchStage.pcOfInstruction = 0;
+    decodeStage.pcOfInstruction = 0;
+    executeStage.pcOfInstruction = 0;
+
+    cycle = 1;
+}
+
+int pipelineIsEmpty(void) {
+    return !fetchStage.valid && !decodeStage.valid && !executeStage.valid;
+}
+
+void flushFetchAndDecode(void) {
+    fetchStage.valid = 0;
+    decodeStage.valid = 0;
+}
+
+void runPipeline(void) {
+    initializePipeline();
+
+    while (getPC() < loadedInstructionCount || !pipelineIsEmpty()) {
+        printf("\n================ Clock Cycle %d ================\n", cycle);
+
+        ExecuteResult exResult;
+        exResult.branchTaken = 0;
+        exResult.newPC = 0;
+
+        if (executeStage.valid) {
+            printf("Execute Stage: ");
+            printCompactInstruction(executeStage.instruction);
+            printf("\n");
+
+            exResult = executeInstruction(
+                executeStage.instruction,
+                executeStage.pcOfInstruction
+            );
+        } else {
+            printf("Execute Stage: Empty\n");
+        }
+
+        if (exResult.branchTaken) {
+            setPC(exResult.newPC);
+            flushFetchAndDecode();
+            printf("Control hazard handled: Fetch and Decode stages flushed.\n");
+        }
+
+        /*
+            Simple template pipeline advance.
+
+            TODO:
+            - Add complete data hazard handling.
+            - Decide whether to stall or forward.
+            - For now, the function hasDataHazard() is a placeholder.
+        */
+
+        if (hasDataHazard()) {
+            printf("Data hazard detected: TODO stall/forward logic here.\n");
+        }
+
+        executeStage = decodeStage;
+        decodeStage = fetchStage;
+
+        if (getPC() < loadedInstructionCount) {
+            fetchStage.valid = 1;
+            fetchStage.pcOfInstruction = getPC();
+            fetchStage.instruction = fetchInstruction(getPC());
+
+            printf("Fetch Stage: fetched instruction at PC = %u\n", getPC());
+
+            incrementPC();
+        } else {
+            fetchStage.valid = 0;
+        }
+
+        printPipelineStages();
+        printFlags();
+
+        cycle++;
+    }
+
+    printf("\nProgram finished after %d clock cycle(s).\n", cycle - 1);
+}
