@@ -22,7 +22,6 @@ void loadProgram(const char *filename) {
     }
 
     char line[128];
-    int address = 0;
 
     while (fgets(line, sizeof(line), file) != NULL) {
         removeComment(line);
@@ -33,8 +32,7 @@ void loadProgram(const char *filename) {
         }
 
         uint16_t instruction = parseLine(clean);
-        storeInstruction(address, instruction);
-        address++;
+        storeInstruction(instruction);
     }
 
     fclose(file);

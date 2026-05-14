@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "instruction.h"
+#include "utils.h"
 
 uint16_t encodeR(Opcode opcode, int r1, int r2) {
     return ((opcode & 0xF) << 12) | ((r1 & 0x3F) << 6) | (r2 & 0x3F);
@@ -46,7 +47,11 @@ const char *opcodeToString(int opcode) {
 void printInstruction(uint16_t instruction) {
     int op = getOpcode(instruction);
     int r1 = getR1(instruction);
-    int last = getImmediate6(instruction);
+    int last = getR2(instruction);
+
+    if (op == OP_LDI || op == OP_BEQZ) {
+        last = signExtend6Bit(getImmediate6(instruction));
+    }
 
     printf("%s R%d %d", opcodeToString(op), r1, last);
 }

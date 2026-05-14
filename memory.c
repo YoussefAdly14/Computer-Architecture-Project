@@ -25,17 +25,14 @@ int isValidDataAddress(int address) {
     return address >= 0 && address < DATA_MEMORY_SIZE;
 }
 
-void storeInstruction(int address, uint16_t instruction) {
-    if (!isValidInstructionAddress(address)) {
-        printf("Error: invalid instruction memory address %d\n", address);
+void storeInstruction(uint16_t instruction) {
+    if (!isValidInstructionAddress(loadedInstructionCount)) {
+        printf("Error: invalid instruction memory address %d\n", loadedInstructionCount);
         return;
     }
 
-    instructionMemory[address] = instruction;
-
-    if (address >= loadedInstructionCount) {
-        loadedInstructionCount = address + 1;
-    }
+    instructionMemory[loadedInstructionCount] = instruction;
+    loadedInstructionCount++;
 }
 
 uint16_t fetchInstruction(int address) {

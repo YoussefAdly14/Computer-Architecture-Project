@@ -1,7 +1,7 @@
-CSEN601 Package 4 C Project Template
-===================================
+CSEN601 Package 4 C Project
+===========================
 
-This is a starter multi-file C template for Package 4.
+This is a multi-file C implementation for Package 4.
 
 Package 4 Summary:
 - Harvard architecture
@@ -42,7 +42,7 @@ Files:
   Executes the actual instructions.
 
 - hazards.h / hazards.c
-  Placeholder for data hazard logic. Start by implementing stalling here.
+  Detects data hazards used by the pipeline stall logic.
 
 - printer.h / printer.c
   Handles printing pipeline stages, registers, and memory.
@@ -69,10 +69,17 @@ On Linux/Mac:
 On Windows:
     processor.exe
 
-Important TODOs:
----------------
-1. Complete data hazard handling in hazards.c and pipeline.c.
-2. Make printing more detailed according to your TA's requirements.
-3. Test every instruction.
-4. Add more assembly programs for testing.
-5. Write your report and record the demo video.
+Implemented behavior:
+--------------------
+1. Reads Package 4 assembly from program.txt.
+2. Parses and stores 16-bit instructions in instruction memory.
+3. Simulates the Package 4 three-stage pipeline: Fetch, Decode, Execute.
+4. Handles data hazards by stalling Fetch and Decode and inserting an Execute bubble.
+5. Handles taken BEQZ and JR control hazards by flushing Fetch and Decode.
+6. Prints pipeline state and flags after each clock cycle.
+7. Prints all registers, instruction memory, and data memory after execution.
+
+Submission reminders:
+--------------------
+1. Test the demo program you want to show in program.txt.
+2. Prepare the report and demo video required by the course submission.
