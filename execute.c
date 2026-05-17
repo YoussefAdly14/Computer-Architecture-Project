@@ -18,32 +18,32 @@ ExecuteResult executeInstruction(uint16_t instruction, uint16_t pcOfInstruction)
     int r2 = getR2(instruction);
     int immRaw = getImmediate6(instruction);
 
-    int8_t oldValue;
-    int8_t newValue;
+    int8_t prevVal;
+    int8_t ResultValue;
 
     switch (opcode) {
         case OP_ADD:
-            oldValue = getRegisterValue(r1);
-            newValue = oldValue + getRegisterValue(r2);
-            setRegisterValue(r1, newValue);
-            updateAddFlags(oldValue, getRegisterValue(r2), newValue);
-            printf("EX: R%d = R%d + R%d -> %d\n", r1, r1, r2, newValue);
+            prevVal = getRegisterValue(r1);
+            ResultValue = prevVal + getRegisterValue(r2);
+            setRegisterValue(r1, ResultValue);
+            updateAddFlags(prevVal, getRegisterValue(r2), ResultValue);
+            printf("EX: R%d = R%d + R%d -> %d\n", r1, r1, r2, ResultValue);
             break;
 
         case OP_SUB:
-            oldValue = getRegisterValue(r1);
-            newValue = oldValue - getRegisterValue(r2);
-            setRegisterValue(r1, newValue);
-            updateSubFlags(oldValue, getRegisterValue(r2), newValue);
-            printf("EX: R%d = R%d - R%d -> %d\n", r1, r1, r2, newValue);
+            prevVal = getRegisterValue(r1);
+            ResultValue = prevVal - getRegisterValue(r2);
+            setRegisterValue(r1, ResultValue);
+            updateSubFlags(prevVal, getRegisterValue(r2), ResultValue);
+            printf("EX: R%d = R%d - R%d -> %d\n", r1, r1, r2, ResultValue);
             break;
 
         case OP_MUL:
-            oldValue = getRegisterValue(r1);
-            newValue = oldValue * getRegisterValue(r2);
-            setRegisterValue(r1, newValue);
-            updateNZFlags(newValue);
-            printf("EX: R%d = R%d * R%d -> %d\n", r1, r1, r2, newValue);
+            prevVal = getRegisterValue(r1);
+            ResultValue = prevVal * getRegisterValue(r2);
+            setRegisterValue(r1, ResultValue);
+            updateNZFlags(ResultValue);
+            printf("EX: R%d = R%d * R%d -> %d\n", r1, r1, r2, ResultValue);
             break;
 
         case OP_LDI: {
@@ -66,17 +66,17 @@ ExecuteResult executeInstruction(uint16_t instruction, uint16_t pcOfInstruction)
         }
 
         case OP_AND:
-            newValue = getRegisterValue(r1) & getRegisterValue(r2);
-            setRegisterValue(r1, newValue);
-            updateNZFlags(newValue);
-            printf("EX: R%d = R%d & R%d -> %d\n", r1, r1, r2, newValue);
+            ResultValue = getRegisterValue(r1) & getRegisterValue(r2);
+            setRegisterValue(r1, ResultValue);
+            updateNZFlags(ResultValue);
+            printf("EX: R%d = R%d & R%d -> %d\n", r1, r1, r2, ResultValue);
             break;
 
         case OP_OR:
-            newValue = getRegisterValue(r1) | getRegisterValue(r2);
-            setRegisterValue(r1, newValue);
-            updateNZFlags(newValue);
-            printf("EX: R%d = R%d | R%d -> %d\n", r1, r1, r2, newValue);
+            ResultValue = getRegisterValue(r1) | getRegisterValue(r2);
+            setRegisterValue(r1, ResultValue);
+            updateNZFlags(ResultValue);
+            printf("EX: R%d = R%d | R%d -> %d\n", r1, r1, r2, ResultValue);
             break;
 
         case OP_JR: {
@@ -90,27 +90,27 @@ ExecuteResult executeInstruction(uint16_t instruction, uint16_t pcOfInstruction)
 
         case OP_SAL: {
             int shift = immRaw;  // shift immediate is positive
-            newValue = getRegisterValue(r1) << shift;
-            setRegisterValue(r1, newValue);
-            updateNZFlags(newValue);
-            printf("EX: R%d = R%d << %d -> %d\n", r1, r1, shift, newValue);
+            ResultValue = getRegisterValue(r1) << shift;
+            setRegisterValue(r1, ResultValue);
+            updateNZFlags(ResultValue);
+            printf("EX: R%d = R%d << %d -> %d\n", r1, r1, shift, ResultValue);
             break;
         }
 
         case OP_SAR: {
             int shift = immRaw;  // shift immediate is positive
-            newValue = getRegisterValue(r1) >> shift;
-            setRegisterValue(r1, newValue);
-            updateNZFlags(newValue);
-            printf("EX: R%d = R%d >> %d -> %d\n", r1, r1, shift, newValue);
+            ResultValue = getRegisterValue(r1) >> shift;
+            setRegisterValue(r1, ResultValue);
+            updateNZFlags(ResultValue);
+            printf("EX: R%d = R%d >> %d -> %d\n", r1, r1, shift, ResultValue);
             break;
         }
 
         case OP_LB: {
             int address = immRaw;
-            newValue = loadData(address);
-            setRegisterValue(r1, newValue);
-            printf("EX: LB R%d, %d -> %d\n", r1, address, newValue);
+            ResultValue = loadData(address);
+            setRegisterValue(r1, ResultValue);
+            printf("EX: LB R%d, %d -> %d\n", r1, address, ResultValue);
             break;
         }
 

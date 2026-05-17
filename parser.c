@@ -40,7 +40,7 @@ void loadProgram(const char *filename) {
     printf("Loaded %d instruction(s) into instruction memory.\n", loadedInstructionCount);
 }
 
-static void toUpperCase(char *str) {
+static void adly_toUpperCase(char *str) {
     for (int i = 0; str[i] != '\0'; i++) {
         str[i] = (char)toupper((unsigned char)str[i]);
     }
@@ -56,7 +56,7 @@ uint16_t parseLine(char *line) {
         return 0;
     }
 
-    toUpperCase(mnemonic);
+    adly_toUpperCase(mnemonic);
 
     int opcode = getOpcodeFromMnemonic(mnemonic);
 

@@ -2,7 +2,7 @@
 #include "pipeline.h"
 #include "instruction.h"
 
-static int instructionWritesToRegister(int opcode) {
+static int adly_instructionWritesToRegister(int opcode) {
     return opcode == OP_ADD ||
            opcode == OP_SUB ||
            opcode == OP_MUL ||
@@ -14,7 +14,7 @@ static int instructionWritesToRegister(int opcode) {
            opcode == OP_LB;
 }
 
-static int instructionReadsR1(int opcode) {
+static int adly_instructionReadsR1(int opcode) {
     return opcode == OP_ADD ||
            opcode == OP_SUB ||
            opcode == OP_MUL ||
@@ -27,7 +27,7 @@ static int instructionReadsR1(int opcode) {
            opcode == OP_SB;
 }
 
-static int instructionReadsR2(int opcode) {
+static int adly_instructionReadsR2(int opcode) {
     return opcode == OP_ADD ||
            opcode == OP_SUB ||
            opcode == OP_MUL ||
@@ -44,7 +44,7 @@ int hasDataHazard(void) {
     int exOpcode = getOpcode(executeStage.instruction);
     int exDestination = getR1(executeStage.instruction);
 
-    if (!instructionWritesToRegister(exOpcode)) {
+    if (!adly_instructionWritesToRegister(exOpcode)) {
         return 0;
     }
 
@@ -52,11 +52,11 @@ int hasDataHazard(void) {
     int decR1 = getR1(decodeStage.instruction);
     int decR2 = getR2(decodeStage.instruction);
 
-    if (instructionReadsR1(decOpcode) && decR1 == exDestination) {
+    if (adly_instructionReadsR1(decOpcode) && decR1 == exDestination) {
         return 1;
     }
 
-    if (instructionReadsR2(decOpcode) && decR2 == exDestination) {
+    if (adly_instructionReadsR2(decOpcode) && decR2 == exDestination) {
         return 1;
     }
 

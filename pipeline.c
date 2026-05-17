@@ -11,7 +11,7 @@ PipelineStage fetchStage;
 PipelineStage decodeStage;
 PipelineStage executeStage;
 
-static int cycle = 1;
+static int adly_cycle = 1;
 
 void initializePipeline(void) {
     fetchStage.valid = 0;
@@ -26,7 +26,7 @@ void initializePipeline(void) {
     decodeStage.pcOfInstruction = 0;
     executeStage.pcOfInstruction = 0;
 
-    cycle = 1;
+    adly_cycle = 1;
 }
 
 int pipelineIsEmpty(void) {
@@ -42,7 +42,7 @@ void runPipeline(void) {
     initializePipeline();
 
     while (getPC() < loadedInstructionCount || !pipelineIsEmpty()) {
-        printf("\n================ Clock Cycle %d ================\n", cycle);
+        printf("\n================ Clock Cycle %d ================\n", adly_cycle);
 
         ExecuteResult exResult;
         exResult.branchTaken = 0;
@@ -92,8 +92,8 @@ void runPipeline(void) {
         printPipelineStages();
         printFlags();
 
-        cycle++;
+        adly_cycle++;
     }
 
-    printf("\nProgram finished after %d clock cycle(s).\n", cycle - 1);
+    printf("\nProgram finished after %d clock cycle(s).\n", adly_cycle - 1);
 }

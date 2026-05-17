@@ -17,7 +17,7 @@ void printCompactInstruction(uint16_t instruction) {
     printf("%s R%d %d", opcodeToString(opcode), r1, last);
 }
 
-static void printStage(const char *stageName, PipelineStage stage) {
+static void adly_printStage(const char *stageName, PipelineStage stage) {
     printf("%-14s: ", stageName);
 
     if (!stage.valid) {
@@ -32,9 +32,9 @@ static void printStage(const char *stageName, PipelineStage stage) {
 
 void printPipelineStages(void) {
     printf("\nPipeline after cycle:\n");
-    printStage("Fetch", fetchStage);
-    printStage("Decode", decodeStage);
-    printStage("Execute", executeStage);
+    adly_printStage("Fetch", fetchStage);
+    adly_printStage("Decode", decodeStage);
+    adly_printStage("Execute", executeStage);
 }
 
 void printFinalMemory(void) {
